@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlanMyEvent — Pakistan's #1 Event Planning Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8CC7A;
+    --gold-dark: #9B7A2E;
+    --gold-glow: rgba(201,168,76,0.18);
+    --black: #080808;
+    --dark: #0F0F0F;
+    --dark2: #141414;
+    --dark3: #1C1C1C;
+    --surface: #1A1A1A;
+    --surface2: #222222;
+    --text: #F2EDE4;
+    --text-muted: #8A857E;
+    --text-dim: #5A5550;
+    --border: rgba(201,168,76,0.12);
+    --border-hover: rgba(201,168,76,0.38);
+    --success: #4CAF7A;
+    --danger: #D94F4F;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--text);overflow-x:hidden;}
+  h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;}
+
+  /* NOISE */
+  body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity:0.5;}
+
+  /* ─── NAV ─── */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:1000;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 3.5rem;height:70px;
+    background:rgba(8,8,8,0.92);
+    backdrop-filter:blur(24px);
+    border-bottom:1px solid var(--border);
+  }
+  /* left gold accent line */
+  nav::after{
+    content:'';position:absolute;bottom:-1px;left:0;width:180px;height:1px;
+    background:linear-gradient(90deg,var(--gold),transparent);
+  }
+
+  .logo{
+    display:flex;align-items:center;gap:0.6rem;
+    font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;
+    color:var(--text);letter-spacing:0.5px;text-decoration:none;
+    flex-shrink:0;
+  }
+  .logo-icon{
+    width:34px;height:34px;border-radius:7px;
+    background:linear-gradient(135deg,var(--gold-dark),var(--gold));
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .logo span{color:var(--gold);}
+
+  .nav-center{display:flex;align-items:center;gap:0.2rem;}
+  .nav-link{
+    display:flex;align-items:center;gap:0.45rem;
+    color:var(--text-muted);text-decoration:none;font-size:0.82rem;
+    letter-spacing:0.3px;font-weight:500;padding:0.45rem 0.85rem;
+    border-radius:6px;transition:all 0.25s;
+  }
+  .nav-link svg{opacity:0.6;transition:opacity 0.25s;}
+  .nav-link:hover{color:var(--gold);background:rgba(201,168,76,0.07);}
+  .nav-link:hover svg{opacity:1;}
+
+  .nav-right{display:flex;align-items:center;gap:0.9rem;flex-shrink:0;}
+  .db-badge{
+    display:inline-flex;align-items:center;gap:0.38rem;
+    background:rgba(76,175,122,0.08);border:1px solid rgba(76,175,122,0.25);
+    color:#4CAF7A;padding:0.28rem 0.75rem;border-radius:50px;
+    font-size:0.72rem;font-weight:600;letter-spacing:0.3px;
+  }
+  .db-dot{width:5px;height:5px;border-radius:50%;background:#4CAF7A;animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:0.5;transform:scale(1);}50%{opacity:1;transform:scale(1.3);}}
+
+  .btn-ghost{
+    padding:0.45rem 1.15rem;border:1px solid rgba(255,255,255,0.12);
+    background:transparent;color:var(--text);border-radius:6px;
+    cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.82rem;
+    transition:all 0.25s;font-weight:500;
+  }
+  .btn-ghost:hover{background:var(--surface2);border-color:var(--gold);color:var(--gold);}
+  .btn-gold{
+    padding:0.45rem 1.3rem;
+    background:linear-gradient(135deg,var(--gold-dark) 0%,var(--gold) 60%,var(--gold-light) 100%);
+    color:var(--black);border:none;border-radius:6px;
+    cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.82rem;
+    font-weight:700;transition:all 0.25s;letter-spacing:0.3px;
+    box-shadow:0 2px 14px rgba(201,168,76,0.22);
+  }
+  .btn-gold:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(201,168,76,0.35);}
+
+  /* ─── HERO ─── */
+  .hero{
+    min-height:100vh;display:flex;align-items:center;justify-content:center;
+    position:relative;overflow:hidden;padding-top:70px;
+    background:radial-gradient(ellipse 70% 55% at 50% -5%,rgba(201,168,76,0.09) 0%,transparent 70%);
+  }
+  .hero-grid{
+    position:absolute;inset:0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(201,168,76,0.04) 1px,transparent 1px);
+    background-size:70px 70px;
+  }
+  .hero-vignette{
+    position:absolute;inset:0;
+    background:radial-gradient(ellipse 90% 80% at 50% 50%,transparent 40%,rgba(8,8,8,0.7) 100%);
+  }
+  .hero-content{text-align:center;position:relative;z-index:1;max-width:880px;padding:2rem;}
+  .hero-badge{
+    display:inline-flex;align-items:center;gap:0.5rem;
+    padding:0.38rem 1.1rem;
+    border:1px solid rgba(201,168,76,0.4);border-radius:50px;
+    color:var(--gold);font-size:0.74rem;letter-spacing:2px;
+    text-transform:uppercase;margin-bottom:2rem;
+    background:rgba(201,168,76,0.06);font-weight:600;
+  }
+  .hero h1{
+    font-size:5.2rem;line-height:1.07;font-weight:600;
+    color:var(--text);margin-bottom:1.5rem;letter-spacing:-1px;
+  }
+  .hero h1 em{color:var(--gold);font-style:italic;}
+  .hero p{
+    font-size:1.05rem;color:var(--text-muted);max-width:560px;
+    margin:0 auto 2.5rem;line-height:1.85;font-weight:300;
+  }
+  .hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+  .btn-lg{padding:0.85rem 2.2rem;font-size:0.95rem;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;transition:all 0.3s;letter-spacing:0.2px;}
+  .btn-primary{
+    background:linear-gradient(135deg,var(--gold-dark),var(--gold) 60%,var(--gold-light));
+    color:var(--black);border:none;box-shadow:0 4px 20px rgba(201,168,76,0.28);
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(201,168,76,0.38);}
+  .btn-outline{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,0.18);}
+  .btn-outline:hover{border-color:var(--gold);color:var(--gold);}
+  .hero-stats{
+    display:flex;gap:3rem;justify-content:center;margin-top:4rem;
+    padding-top:3rem;border-top:1px solid var(--border);
+  }
+  .stat{text-align:center;}
+  .stat-num{font-family:'Cormorant Garamond',serif;font-size:2.1rem;font-weight:700;color:var(--gold);}
+  .stat-label{font-size:0.77rem;color:var(--text-muted);margin-top:0.15rem;letter-spacing:0.5px;}
+
+  /* ─── SECTIONS ─── */
+  section{padding:6rem 4rem;position:relative;}
+  .section-label{font-size:0.72rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:0.9rem;font-weight:600;}
+  .section-title{font-size:2.8rem;font-weight:600;line-height:1.2;margin-bottom:1rem;}
+  .section-sub{color:var(--text-muted);font-size:0.95rem;max-width:520px;line-height:1.85;}
+  .section-header{max-width:1200px;margin:0 auto 4rem;}
+  .text-center{text-align:center;}
+  .text-center .section-sub{margin:0 auto;}
+
+  /* ─── SEARCH ─── */
+  .search-section{
+    padding:2.5rem 4rem;
+    background:var(--dark2);
+    border-top:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+  }
+  .search-box{
+    max-width:880px;margin:0 auto;
+    display:flex;gap:0;align-items:stretch;
+    background:var(--surface);border:1px solid var(--border-hover);
+    border-radius:10px;overflow:hidden;
+  }
+  .search-box select,.search-box input{
+    flex:1;min-width:140px;
+    background:transparent;border:none;color:var(--text);
+    padding:0.85rem 1.1rem;font-family:'DM Sans',sans-serif;
+    font-size:0.9rem;outline:none;border-right:1px solid var(--border);
+  }
+  .search-box select option{background:var(--dark3);}
+  .search-box .btn-gold{padding:0.85rem 2rem;border-radius:0;font-size:0.9rem;white-space:nowrap;box-shadow:none;}
+
+  /* ─── CATEGORIES ─── */
+  .categories-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+    gap:1rem;max-width:1200px;margin:0 auto;
+  }
+  .category-card{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:10px;padding:1.6rem 0.8rem;text-align:center;
+    cursor:pointer;transition:all 0.3s;text-decoration:none;color:var(--text);
+    display:flex;flex-direction:column;align-items:center;gap:0.7rem;
+  }
+  .category-card:hover{border-color:var(--gold);background:var(--surface2);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.4);}
+  .cat-icon-wrap{
+    width:48px;height:48px;border-radius:10px;
+    background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);
+    display:flex;align-items:center;justify-content:center;
+    transition:all 0.3s;
+  }
+  .category-card:hover .cat-icon-wrap{background:rgba(201,168,76,0.15);border-color:rgba(201,168,76,0.5);}
+  .cat-name{font-size:0.8rem;font-weight:500;color:var(--text-muted);transition:color 0.3s;}
+  .category-card:hover .cat-name{color:var(--gold);}
+
+  /* ─── VENDORS ─── */
+  .vendors-section{background:var(--dark2);}
+  .vendors-filter{
+    display:flex;gap:0.6rem;flex-wrap:wrap;
+    max-width:1200px;margin:0 auto 2.5rem;
+  }
+  .filter-btn{
+    padding:0.42rem 1.1rem;border:1px solid var(--border);
+    background:transparent;color:var(--text-muted);border-radius:50px;
+    cursor:pointer;font-size:0.8rem;transition:all 0.25s;
+    font-family:'DM Sans',sans-serif;font-weight:500;
+  }
+  .filter-btn.active,.filter-btn:hover{
+    background:var(--gold);color:var(--black);border-color:var(--gold);font-weight:600;
+  }
+  .vendors-grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));
+    gap:1.4rem;max-width:1200px;margin:0 auto;
+  }
+  .vendor-card{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:12px;overflow:hidden;cursor:pointer;
+    transition:all 0.3s;position:relative;
+  }
+  .vendor-card:hover{border-color:var(--gold);transform:translateY(-5px);box-shadow:0 20px 55px rgba(0,0,0,0.5);}
+  .vendor-img{height:210px;position:relative;overflow:hidden;background:var(--dark3);}
+  .vendor-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s;}
+  .vendor-card:hover .vendor-img img{transform:scale(1.06);}
+  .vendor-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,8,8,0.5) 0%,transparent 50%);}
+  .vendor-badge{
+    position:absolute;top:11px;left:11px;
+    background:var(--gold);color:var(--black);
+    padding:0.22rem 0.65rem;border-radius:4px;
+    font-size:0.68rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;
+  }
+  .vendor-badge.verified{background:#3FA86A;color:#fff;}
+  .vendor-360{
+    position:absolute;top:11px;right:11px;
+    background:rgba(0,0,0,0.65);border:1px solid var(--gold);
+    color:var(--gold);padding:0.28rem 0.6rem;
+    border-radius:4px;font-size:0.68rem;font-weight:700;
+    backdrop-filter:blur(4px);
+  }
+  .vendor-info{padding:1.2rem 1.4rem;}
+  .vendor-category{font-size:0.7rem;color:var(--gold);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:0.35rem;font-weight:600;}
+  .vendor-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:0.3rem;}
+  .vendor-location{font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem;display:flex;align-items:center;gap:0.3rem;}
+  .vendor-rating{display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;}
+  .stars{color:var(--gold);font-size:0.85rem;letter-spacing:1px;}
+  .rating-num{font-size:0.8rem;color:var(--text-muted);}
+  .vendor-price{display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid var(--border);}
+  .price-from{font-size:0.72rem;color:var(--text-dim);}
+  .price-amount{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:700;color:var(--gold);}
+  .price-amount span{font-family:'DM Sans',sans-serif;font-size:0.72rem;color:var(--text-muted);font-weight:400;}
+  .vendor-actions{display:flex;gap:0.45rem;}
+  .btn-sm{padding:0.38rem 0.85rem;font-size:0.76rem;border-radius:5px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;transition:all 0.2s;}
+  .btn-sm-gold{background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:var(--black);border:none;}
+  .btn-sm-gold:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(201,168,76,0.3);}
+  .btn-sm-ghost{background:transparent;color:var(--text-muted);border:1px solid var(--border);}
+  .btn-sm-ghost:hover{border-color:var(--gold);color:var(--gold);}
+
+  /* ─── HALLS ─── */
+  .halls-section{background:var(--black);}
+  .halls-grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
+    gap:1.4rem;max-width:1200px;margin:0 auto;
+  }
+  .hall-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all 0.3s;}
+  .hall-card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 18px 50px rgba(0,0,0,0.5);}
+  .hall-preview{height:230px;position:relative;overflow:hidden;cursor:pointer;}
+  .hall-preview-img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s;}
+  .hall-card:hover .hall-preview-img{transform:scale(1.05);}
+  .hall-360-btn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.38);opacity:0;transition:opacity 0.3s;}
+  .hall-card:hover .hall-360-btn{opacity:1;}
+  .hall-360-circle{width:68px;height:68px;border-radius:50%;border:2px solid var(--gold);background:rgba(201,168,76,0.12);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;backdrop-filter:blur(6px);}
+  .hall-info{padding:1.4rem;}
+  .hall-name{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:600;margin-bottom:0.9rem;}
+  .hall-specs{display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;margin-bottom:1rem;}
+  .hall-spec{background:var(--dark3);border-radius:7px;padding:0.6rem 0.9rem;border:1px solid var(--border);}
+  .spec-label{font-size:0.67rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.7px;}
+  .spec-value{font-size:0.92rem;font-weight:600;color:var(--text);margin-top:0.18rem;}
+  .spec-value.gold{color:var(--gold);}
+
+  /* ─── PACKAGES ─── */
+  .packages-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(275px,1fr));gap:1.4rem;max-width:1200px;margin:0 auto;}
+  .package-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;transition:all 0.3s;position:relative;overflow:hidden;}
+  .package-card.featured{border-color:var(--gold);}
+  .package-card.featured::before{content:'Most Popular';position:absolute;top:18px;right:-28px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:var(--black);padding:0.3rem 2.2rem;font-size:0.68rem;font-weight:700;transform:rotate(35deg);letter-spacing:0.5px;}
+  .package-card:hover{transform:translateY(-4px);box-shadow:0 20px 55px rgba(0,0,0,0.4);}
+  .package-icon{width:50px;height:50px;border-radius:10px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem;}
+  .package-name{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:600;margin-bottom:0.45rem;}
+  .package-desc{color:var(--text-muted);font-size:0.86rem;line-height:1.75;margin-bottom:1.4rem;}
+  .package-includes{list-style:none;margin-bottom:1.5rem;}
+  .package-includes li{padding:0.45rem 0;border-bottom:1px solid var(--border);font-size:0.83rem;color:var(--text-muted);display:flex;align-items:center;gap:0.6rem;}
+  .package-includes li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+  .package-price{font-family:'Cormorant Garamond',serif;font-size:2.1rem;font-weight:700;color:var(--gold);margin-bottom:1.2rem;}
+  .package-price span{font-family:'DM Sans',sans-serif;font-size:0.82rem;color:var(--text-muted);}
+
+  /* ─── DEALS ─── */
+  .deals-section{background:var(--dark2);}
+  .deals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1.2rem;max-width:1200px;margin:0 auto;}
+  .deal-card{background:var(--surface);border:1px solid rgba(217,79,79,0.25);border-radius:10px;padding:1.4rem;position:relative;overflow:hidden;transition:all 0.3s;}
+  .deal-card:hover{border-color:var(--danger);transform:translateY(-3px);}
+  .deal-timer{position:absolute;top:12px;right:12px;background:rgba(217,79,79,0.12);border:1px solid rgba(217,79,79,0.35);color:#D94F4F;padding:0.22rem 0.6rem;border-radius:4px;font-size:0.7rem;font-weight:700;}
+  .deal-off{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:700;color:#D94F4F;line-height:1;}
+  .deal-name{font-size:0.98rem;font-weight:600;margin:0.45rem 0 0.28rem;}
+  .deal-vendor{font-size:0.78rem;color:var(--text-muted);margin-bottom:0.8rem;}
+  .deal-prices{display:flex;align-items:center;gap:1rem;}
+  .price-old{font-size:0.83rem;color:var(--text-dim);text-decoration:line-through;}
+  .price-new{font-size:1.08rem;font-weight:700;color:var(--gold);}
+  .deal-date{font-size:0.73rem;color:var(--text-dim);margin-top:0.55rem;}
+
+  /* ─── STEPS ─── */
+  .steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:2rem;max-width:1050px;margin:0 auto;}
+  .step-card{text-align:center;padding:2rem 1.2rem;}
+  .step-num{width:58px;height:58px;border-radius:50%;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:700;color:var(--gold);background:rgba(201,168,76,0.05);}
+  .step-title{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;margin-bottom:0.5rem;}
+  .step-desc{font-size:0.83rem;color:var(--text-muted);line-height:1.75;}
+
+  /* ─── BUDGET ─── */
+  .budget-section{background:var(--dark2);}
+  .budget-planner{max-width:780px;margin:0 auto;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2.5rem;}
+  .budget-form{display:grid;gap:1.2rem;}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+  .form-group{display:flex;flex-direction:column;gap:0.4rem;}
+  .form-label{font-size:0.8rem;color:var(--text-muted);font-weight:500;}
+  .form-input,.form-select{background:var(--dark3);border:1px solid var(--border);color:var(--text);padding:0.72rem 1rem;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:0.88rem;outline:none;transition:border-color 0.25s;}
+  .form-input:focus,.form-select:focus{border-color:var(--gold);}
+  .form-select option{background:var(--dark3);}
+  .budget-slider{width:100%;accent-color:var(--gold);cursor:pointer;height:5px;}
+  .budget-result{margin-top:1.5rem;background:var(--dark3);border-radius:10px;padding:1.5rem;border:1px solid var(--border);display:none;}
+  .budget-result.show{display:block;}
+  .result-title{font-size:0.74rem;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1rem;}
+  .result-items{display:grid;gap:0.5rem;}
+  .result-item{display:flex;justify-content:space-between;align-items:center;padding:0.48rem 0;border-bottom:1px solid var(--border);}
+  .result-item:last-child{border-bottom:none;}
+  .result-name{font-size:0.86rem;color:var(--text-muted);}
+  .result-price{font-size:0.93rem;font-weight:600;color:var(--gold);}
+  .result-total{display:flex;justify-content:space-between;align-items:center;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border-hover);}
+  .total-label{font-family:'Cormorant Garamond',serif;font-size:1.15rem;}
+  .total-price{font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:700;color:var(--gold);}
+
+  /* ─── TESTIMONIALS ─── */
+  .testimonials-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.4rem;max-width:1200px;margin:0 auto;}
+  .testimonial-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;transition:all 0.3s;}
+  .testimonial-card:hover{border-color:var(--gold);}
+  .quote-mark{font-size:3.5rem;color:var(--gold);line-height:1;font-family:'Cormorant Garamond',serif;opacity:0.35;}
+  .testimonial-text{font-size:0.9rem;color:var(--text-muted);line-height:1.85;margin:0.4rem 0 1.4rem;}
+  .testimonial-author{display:flex;align-items:center;gap:0.9rem;}
+  .author-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--gold-dark),var(--gold));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;color:var(--black);}
+  .author-name{font-weight:600;font-size:0.88rem;}
+  .author-event{font-size:0.75rem;color:var(--text-muted);}
+
+  /* ─── MODALS ─── */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:2000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity 0.3s;padding:1rem;}
+  .modal-overlay.open{opacity:1;pointer-events:all;}
+  .modal{background:var(--dark2);border:1px solid var(--border-hover);border-radius:16px;padding:2.4rem;max-width:470px;width:100%;position:relative;transform:translateY(20px);transition:transform 0.3s;}
+  .modal-overlay.open .modal{transform:translateY(0);}
+  .modal-close{position:absolute;top:1.1rem;right:1.1rem;background:transparent;border:none;color:var(--text-muted);font-size:1.3rem;cursor:pointer;transition:color 0.2s;}
+  .modal-close:hover{color:var(--gold);}
+  .modal-title{font-family:'Cormorant Garamond',serif;font-size:1.9rem;margin-bottom:0.3rem;}
+  .modal-sub{color:var(--text-muted);font-size:0.85rem;margin-bottom:1.8rem;}
+  .modal-tabs{display:flex;margin-bottom:1.8rem;border:1px solid var(--border);border-radius:7px;overflow:hidden;}
+  .modal-tab{flex:1;padding:0.58rem;text-align:center;cursor:pointer;font-size:0.83rem;font-weight:500;transition:all 0.2s;background:transparent;border:none;color:var(--text-muted);font-family:'DM Sans',sans-serif;}
+  .modal-tab.active{background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:var(--black);font-weight:700;}
+  .modal-form{display:grid;gap:0.9rem;}
+  .modal-input{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:0.78rem 1rem;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:0.88rem;outline:none;transition:border-color 0.25s;width:100%;}
+  .modal-input:focus{border-color:var(--gold);}
+
+  .booking-detail{background:var(--surface);border-radius:10px;padding:1.2rem;margin-bottom:1.4rem;border:1px solid var(--border);}
+  .booking-vendor-name{font-family:'Cormorant Garamond',serif;font-size:1.35rem;margin-bottom:0.3rem;}
+  .date-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+  .capacity-badge{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:0.2rem 0.6rem;border-radius:4px;font-size:0.7rem;font-weight:600;}
+  .pill{display:inline-block;padding:0.2rem 0.65rem;border-radius:50px;font-size:0.7rem;font-weight:600;background:rgba(201,168,76,0.08);color:var(--gold);border:1px solid rgba(201,168,76,0.25);}
+
+  .viewer-360-wrap{width:100%;height:320px;border-radius:12px;overflow:hidden;position:relative;border:1px solid var(--border);margin-bottom:1rem;background:#0a0a0a;cursor:grab;}
+  .viewer-360-wrap:active{cursor:grabbing;}
+  .viewer-360-wrap canvas{display:block;width:100%!important;height:100%!important;}
+  .viewer-overlay-badge{position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.65);border:1px solid var(--gold);color:var(--gold);padding:0.22rem 0.65rem;border-radius:4px;font-size:0.68rem;font-weight:700;pointer-events:none;backdrop-filter:blur(4px);display:flex;align-items:center;gap:0.3rem;z-index:2;}
+  .viewer-hint-bar{position:absolute;bottom:0;left:0;right:0;text-align:center;padding:0.55rem;font-size:0.7rem;color:rgba(255,255,255,0.5);background:linear-gradient(transparent,rgba(0,0,0,0.5));pointer-events:none;z-index:2;}
+  .viewer-loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.8rem;background:#0a0a0a;z-index:3;transition:opacity 0.5s;}
+  .viewer-loading.hidden{opacity:0;pointer-events:none;}
+  .spinner{width:36px;height:36px;border:2px solid rgba(201,168,76,0.2);border-top-color:var(--gold);border-radius:50%;animation:spin 0.9s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* ─── FOOTER ─── */
+  footer{background:var(--dark2);border-top:1px solid var(--border);padding:4rem;}
+  .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;max-width:1200px;margin:0 auto 3rem;}
+  .footer-logo{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:700;color:var(--gold);margin-bottom:1rem;}
+  .footer-desc{font-size:0.83rem;color:var(--text-muted);line-height:1.85;max-width:270px;}
+  .footer-col h4{font-size:0.8rem;font-weight:600;margin-bottom:1.1rem;letter-spacing:0.5px;color:var(--text);text-transform:uppercase;letter-spacing:1px;}
+  .footer-col a{display:block;color:var(--text-muted);text-decoration:none;font-size:0.81rem;margin-bottom:0.55rem;transition:color 0.2s;}
+  .footer-col a:hover{color:var(--gold);}
+  .footer-bottom{max-width:1200px;margin:0 auto;padding-top:2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;color:var(--text-dim);}
+
+  /* ─── TOAST ─── */
+  .toast{position:fixed;bottom:2rem;right:2rem;z-index:9999;background:var(--surface);border:1px solid var(--gold);border-radius:9px;padding:1rem 1.4rem;color:var(--text);font-size:0.86rem;transform:translateX(200%);transition:transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275);max-width:310px;}
+  .toast.show{transform:translateX(0);}
+  .toast-title{font-weight:700;color:var(--gold);margin-bottom:0.18rem;font-size:0.9rem;}
+
+  /* ANIMATIONS */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+  .hero-content{animation:fadeUp 0.85s ease forwards;}
+
+  /* RESPONSIVE */
+  @media(max-width:900px){
+    nav{padding:0 1.4rem;}
+    .nav-center{display:none;}
+    section{padding:4rem 1.5rem;}
+    .hero h1{font-size:3rem;}
+    .hero-stats{gap:1.5rem;flex-wrap:wrap;}
+    .search-section{padding:2rem 1.5rem;}
+    .footer-grid{grid-template-columns:1fr 1fr;}
+    .form-row{grid-template-columns:1fr;}
+  }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+<!-- ══════════════════ NAV ══════════════════ -->
+<nav>
+  <a class="logo" href="#">
+    <div class="logo-icon">
+      <!-- Star/diamond logo icon -->
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M9 1L10.8 7H17L11.6 10.8L13.4 17L9 13.2L4.6 17L6.4 10.8L1 7H7.2L9 1Z" fill="#0A0A0A"/>
+      </svg>
+    </div>
+    Plan<span>My</span>Event
+  </a>
+
+  <div class="nav-center">
+    <a class="nav-link" href="#vendors">
+      <!-- vendors icon -->
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Vendors
+    </a>
+    <a class="nav-link" href="#halls">
+      <!-- building icon -->
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="13" rx="1"/><path d="M9 22V12h6v10"/><path d="M3 9l9-7 9 7"/></svg>
+      Halls & Venues
+    </a>
+    <a class="nav-link" href="#packages">
+      <!-- package icon -->
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+      Packages
+    </a>
+    <a class="nav-link" href="#deals">
+      <!-- tag icon -->
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+      Deals
+    </a>
+
+    <a class="nav-link" href="#availability">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Availability
+    </a>
+    <a class="nav-link" href="#budget">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg>
+      Budget
+    </a>
+  </div>
+
+  <div class="nav-right">
+    <span class="db-badge"><span class="db-dot"></span>Live</span>
+    <button class="btn-ghost" onclick="openModal('login')">Login</button>
+    <button class="btn-gold" onclick="openModal('signup')">Sign Up Free</button>
+  </div>
+</nav>
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="var(--gold)"><path d="M5 0L6.2 3.8H10L7 6.2L8.1 10L5 7.8L1.9 10L3 6.2L0 3.8H3.8L5 0Z"/></svg>
+      Pakistan's #1 Event Platform
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="var(--gold)"><path d="M5 0L6.2 3.8H10L7 6.2L8.1 10L5 7.8L1.9 10L3 6.2L0 3.8H3.8L5 0Z"/></svg>
+    </div>
+    <h1>Plan Your <em>Perfect</em><br>Event With Ease</h1>
+    <p>Search, compare, and book top-rated vendors for weddings, birthdays, mehndi, corporate events — all in one luxurious platform.</p>
+    <div class="hero-btns">
+      <button class="btn-lg btn-primary" onclick="document.getElementById('vendors').scrollIntoView({behavior:'smooth'})">Explore Vendors</button>
+      <button class="btn-lg btn-outline" onclick="openModal('signup')">Get Started Free</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">500+</div><div class="stat-label">Verified Vendors</div></div>
+      <div class="stat"><div class="stat-num">12K+</div><div class="stat-label">Events Planned</div></div>
+      <div class="stat"><div class="stat-num">3</div><div class="stat-label">Major Cities</div></div>
+      <div class="stat"><div class="stat-num">4.9★</div><div class="stat-label">Average Rating</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ SEARCH ══════════════════ -->
+<div class="search-section">
+  <div class="search-box">
+    <select>
+      <option value="">All Categories</option>
+      <option>Photography</option><option>Catering</option><option>Decoration</option>
+      <option>Makeup Artists</option><option>Halls & Venues</option><option>DJ & Sound</option>
+      <option>Bridal Services</option><option>Event Planners</option>
+    </select>
+    <select>
+      <option>All Cities</option><option>Karachi</option><option>Lahore</option><option>Islamabad</option>
+    </select>
+    <input type="text" placeholder="Search vendors, halls, services...">
+    <button class="btn-gold" onclick="showToast('Searching…','Finding the best vendors for you!')">Search</button>
+  </div>
+</div>
+
+<!-- ══════════════════ CATEGORIES ══════════════════ -->
+<section style="padding:4rem;">
+  <div class="categories-grid">
+    <a class="category-card" onclick="filterVendors('Photography')">
+      <div class="cat-icon-wrap">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      </div>
+      <div class="cat-name">Photography</div>
+    </a>
+    <a class="category-card" onclick="filterVendors('Catering')">
+      <div class="cat-icon-wrap">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+      </div>
+      <div class="cat-name">Catering</div>
+    </a>
+    <a class="category-card" onclick="filterVendors('Decoration')">
+      <div class="cat-icon-wrap">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 8a4 4 0 1 0 4 4"/><path d="M22 2L12 12"/></svg>
+      </div>
+      <div class="cat-name">Decoration</div>
+    </a>
+    <a class="category-card" onclick="filterVendors('Makeup')">
+      <div class="cat-icon-wrap">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+      <div class="cat-name">Makeup Artists</div>
+    </a>
+    <a class="category-card" onclick="filterVendors('Venues')">
+      <div class="cat-icon-wrap">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="13" rx="1"/><path d="M9 22V12h6v10"/><path d="M3 9l9-7 9 7"/></svg>
+      </div>
+      <div class="cat-name">Halls & Venues</div>
+    </a>
+    <a class="category-card" onclick="filterVendors('DJ')">
+      <div class="cat-icon-wrap">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
+      </div>
+      <div class="cat-name">DJ & Sound</div>
+    </a>
+    <a class="category-card" onclick="filterVendors('Bridal')">
+      <div class="cat-icon-wrap">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="cat-name">Bridal Services</div>
+    </a>
+    <a class="category-card" onclick="filterVendors('Planners')">
+      <div class="cat-icon-wrap">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <div class="cat-name">Event Planners</div>
+    </a>
+  </div>
+</section>
+
+<!-- ══════════════════ VENDORS ══════════════════ -->
+<section class="vendors-section" id="vendors">
+  <div class="section-header">
+    <div class="section-label">Our Vendors</div>
+    <h2 class="section-title">Top Rated Service Providers</h2>
+    <p class="section-sub">All vendors are verified. View their portfolios, compare prices, and book instantly.</p>
+  </div>
+  <div class="vendors-filter" id="vendor-filters">
+    <button class="filter-btn active" onclick="filterVendors('all',this)">All</button>
+    <button class="filter-btn" onclick="filterVendors('Photography',this)">Photography</button>
+    <button class="filter-btn" onclick="filterVendors('Catering',this)">Catering</button>
+    <button class="filter-btn" onclick="filterVendors('Decoration',this)">Decoration</button>
+    <button class="filter-btn" onclick="filterVendors('Makeup',this)">Makeup</button>
+    <button class="filter-btn" onclick="filterVendors('Venues',this)">Venues</button>
+    <button class="filter-btn" onclick="filterVendors('DJ',this)">DJ & Sound</button>
+    <button class="filter-btn" onclick="filterVendors('Bridal',this)">Bridal</button>
+  </div>
+  <div class="vendors-grid" id="vendors-grid"></div>
+</section>
+
+<!-- ══════════════════ HALLS ══════════════════ -->
+<section class="halls-section" id="halls">
+  <div class="section-header">
+    <div class="section-label">Halls & Venues</div>
+    <h2 class="section-title">Explore Halls in <em style="color:var(--gold);font-style:italic">360°</em></h2>
+    <p class="section-sub">Take a virtual tour of every hall before you book. See capacity, pricing, and full specs clearly.</p>
+  </div>
+  <div class="halls-grid" id="halls-grid"></div>
+</section>
+
+<!-- ══════════════════ PACKAGES ══════════════════ -->
+<section id="packages" style="background:var(--dark2);">
+  <div class="section-header text-center">
+    <div class="section-label">Bundle & Save</div>
+    <h2 class="section-title">Event Packages</h2>
+    <p class="section-sub">Pre-bundled deals for complete event planning. Save up to 25% versus booking separately.</p>
+  </div>
+  <div class="packages-grid" id="packages-grid"></div>
+</section>
+
+<!-- ══════════════════ DEALS ══════════════════ -->
+<section class="deals-section" id="deals">
+  <div class="section-header">
+    <div class="section-label">🔥 Limited Time</div>
+    <h2 class="section-title">Last Minute Deals</h2>
+    <p class="section-sub">Vendors offering special discounts on upcoming available dates. Book fast before they're gone!</p>
+  </div>
+  <div class="deals-grid" id="deals-grid"></div>
+</section>
+
+<!-- ══════════════════ AVAILABILITY CALENDAR ══════════════════ -->
+<section id="availability" style="background:var(--dark2);">
+  <div class="section-header">
+    <div class="section-label">Check Availability</div>
+    <h2 class="section-title">Vendor & Hall Availability</h2>
+    <p class="section-sub">Select any vendor or hall and see their free dates instantly before you book.</p>
+  </div>
+
+  <style>
+    #avail-vendor, #avail-month {
+      background: #0A0A0A !important;
+      color: #C9A84C !important;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    #avail-vendor option, #avail-month option {
+      background: #0A0A0A !important;
+      color: #F2EDE4 !important;
+      padding: 6px 10px;
+    }
+    #avail-vendor optgroup {
+      background: #111111 !important;
+      color: #C9A84C !important;
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+    #avail-vendor option:hover, #avail-month option:hover {
+      background: #1A1A1A !important;
+    }
+    .avail-select-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      background: #0A0A0A;
+      border: 1px solid rgba(201,168,76,0.5);
+      border-radius: 8px;
+      padding: 0.65rem 1rem;
+      position: relative;
+    }
+    .avail-select-wrap:focus-within {
+      border-color: #C9A84C;
+      box-shadow: 0 0 0 2px rgba(201,168,76,0.12);
+    }
+    .avail-chevron {
+      color: #C9A84C;
+      pointer-events: none;
+      flex-shrink: 0;
+    }
+  </style>
+  <!-- Picker bar -->
+  <div style="max-width:1200px;margin:0 auto 2.5rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+    <div class="avail-select-wrap" style="flex:1;min-width:260px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <select id="avail-vendor" onchange="loadAvailability()" style="flex:1;">
+        <option value="" style="color:#6A6560;">— Select a Vendor or Hall —</option>
+        <optgroup label="— Photography —">
+          <option value="v1">Royal Moments Studio · Karachi</option>
+          <option value="v7">Lens &amp; Life Photography · Islamabad</option>
+        </optgroup>
+        <optgroup label="— Catering —">
+          <option value="v2">Zafran Catering Co. · Lahore</option>
+          <option value="v9">Khyber Catering · Islamabad</option>
+        </optgroup>
+        <optgroup label="— Decoration —">
+          <option value="v3">Blooming Decors · Karachi</option>
+        </optgroup>
+        <optgroup label="— Makeup —">
+          <option value="v4">Glam by Sana · Islamabad</option>
+        </optgroup>
+        <optgroup label="— DJ &amp; Sound —">
+          <option value="v5">Sound Waves DJ · Karachi</option>
+        </optgroup>
+        <optgroup label="— Bridal —">
+          <option value="v6">Noor Bridal Studio · Lahore</option>
+        </optgroup>
+        <optgroup label="— Halls &amp; Venues —">
+          <option value="h1">Pearl Continental Ballroom — 1,500 pax</option>
+          <option value="h2">Avari Towers Grand Hall — 800 pax</option>
+          <option value="h3">Serena Convention Centre — 2,000 pax</option>
+          <option value="h4">Rose Garden Banquet — 600 pax</option>
+        </optgroup>
+      </select>
+      <svg class="avail-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="avail-select-wrap">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <select id="avail-month" onchange="loadAvailability()">
+        <option value="11">December 2025</option>
+        <option value="0">January 2026</option>
+        <option value="1">February 2026</option>
+        <option value="2">March 2026</option>
+      </select>
+      <svg class="avail-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </div>
+
+  <!-- Calendar display -->
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 320px;gap:1.5rem;" id="avail-main">
+
+    <!-- Calendar grid -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:2rem;" id="cal-panel">
+      <div id="cal-placeholder" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:360px;color:var(--text-dim);text-align:center;gap:1rem;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#3a3530" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <p style="font-size:0.88rem;">Select a vendor or hall above<br>to view their availability</p>
+      </div>
+      <div id="cal-content" style="display:none;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+          <div id="cal-vendor-name" style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;"></div>
+          <div id="cal-month-label" style="font-size:0.8rem;color:var(--text-muted);background:var(--dark3);padding:0.3rem 0.9rem;border-radius:50px;border:1px solid var(--border);"></div>
+        </div>
+        <!-- Day labels -->
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:0.5rem;">
+          <div style="text-align:center;font-size:0.68rem;color:var(--text-dim);font-weight:600;padding:0.3rem;">Sun</div>
+          <div style="text-align:center;font-size:0.68rem;color:var(--text-dim);font-weight:600;padding:0.3rem;">Mon</div>
+          <div style="text-align:center;font-size:0.68rem;color:var(--text-dim);font-weight:600;padding:0.3rem;">Tue</div>
+          <div style="text-align:center;font-size:0.68rem;color:var(--text-dim);font-weight:600;padding:0.3rem;">Wed</div>
+          <div style="text-align:center;font-size:0.68rem;color:var(--text-dim);font-weight:600;padding:0.3rem;">Thu</div>
+          <div style="text-align:center;font-size:0.68rem;color:var(--text-dim);font-weight:600;padding:0.3rem;">Fri</div>
+          <div style="text-align:center;font-size:0.68rem;color:var(--text-dim);font-weight:600;padding:0.3rem;">Sat</div>
+        </div>
+        <div id="cal-days-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;"></div>
+        <!-- Legend -->
+        <div style="display:flex;gap:1.5rem;margin-top:1.4rem;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:var(--text-muted);">
+            <span style="width:12px;height:12px;border-radius:3px;background:rgba(76,175,122,0.2);border:1px solid rgba(76,175,122,0.5);display:inline-block;"></span>Available
+          </div>
+          <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:var(--text-muted);">
+            <span style="width:12px;height:12px;border-radius:3px;background:rgba(217,79,79,0.2);border:1px solid rgba(217,79,79,0.5);display:inline-block;"></span>Booked
+          </div>
+          <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:var(--text-muted);">
+            <span style="width:12px;height:12px;border-radius:3px;background:rgba(232,168,56,0.15);border:1px solid rgba(232,168,56,0.45);display:inline-block;"></span>Pending / On Hold
+          </div>
+          <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:var(--text-muted);">
+            <span style="width:12px;height:12px;border-radius:3px;background:var(--dark3);border:1px solid var(--border);display:inline-block;"></span>Unavailable
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Side info panel -->
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+      <!-- vendor info card -->
+      <div id="avail-vendor-card" style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.4rem;display:none;">
+        <div id="avc-cat" style="font-size:0.7rem;color:var(--gold);letter-spacing:1.2px;text-transform:uppercase;font-weight:600;margin-bottom:0.4rem;"></div>
+        <div id="avc-name" style="font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;margin-bottom:0.3rem;"></div>
+        <div id="avc-city" style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.9rem;display:flex;align-items:center;gap:0.3rem;"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1rem;" id="avc-specs"></div>
+        <button class="btn-gold" style="width:100%;padding:0.7rem;font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.85rem;border-radius:6px;cursor:pointer;border:none;" id="avc-book-btn">Book Now</button>
+      </div>
+
+      <!-- selected date info -->
+      <div id="avail-date-card" style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.4rem;display:none;">
+        <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.5rem;">Selected Date</div>
+        <div id="adc-date" style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:0.4rem;"></div>
+        <div id="adc-status" style="font-size:0.82rem;font-weight:600;margin-bottom:0.8rem;"></div>
+        <div id="adc-action"></div>
+      </div>
+
+      <!-- quick stats -->
+      <div id="avail-stats-card" style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.4rem;display:none;">
+        <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">This Month</div>
+        <div style="display:grid;gap:0.6rem;" id="avail-stats-inner"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ HOW IT WORKS ══════════════════ -->
+<section style="background:var(--black);">
+  <div class="section-header text-center">
+    <div class="section-label">Simple Process</div>
+    <h2 class="section-title">How It Works</h2>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-num">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="step-title">Create Account</div>
+      <p class="step-desc">Sign up free. It only takes a minute to get started.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
+      <div class="step-title">Search & Compare</div>
+      <p class="step-desc">Browse verified vendors, compare prices and packages easily.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+      <div class="step-title">Virtual Tour</div>
+      <p class="step-desc">View halls in 360° before deciding. Check capacity and layout.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div class="step-title">Book & Relax</div>
+      <p class="step-desc">Confirm your booking securely. We handle the rest.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ BUDGET PLANNER ══════════════════ -->
+<section class="budget-section" id="budget">
+  <div class="section-header text-center">
+    <div class="section-label">Smart Tool</div>
+    <h2 class="section-title">Budget Planner</h2>
+    <p class="section-sub">Enter your event details and budget — we'll suggest the best vendor combinations for you.</p>
+  </div>
+  <div class="budget-planner">
+    <div class="budget-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Event Type</label>
+          <select class="form-select" id="bp-event">
+            <option>Wedding</option><option>Mehndi</option><option>Birthday Party</option><option>Corporate Event</option><option>Engagement</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">City</label>
+          <select class="form-select" id="bp-city">
+            <option>Karachi</option><option>Lahore</option><option>Islamabad</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Guest Count</label>
+        <input class="form-input" type="number" placeholder="e.g. 300" id="bp-guests">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Total Budget: <strong id="budget-val" style="color:var(--gold)">PKR 500,000</strong></label>
+        <input type="range" class="budget-slider" min="100000" max="5000000" step="50000" value="500000" oninput="updateBudget(this.value)" id="bp-budget">
+      </div>
+      <button class="btn-gold btn-lg" style="width:100%" onclick="calculateBudget()">Calculate Smart Budget →</button>
+    </div>
+    <div class="budget-result" id="budget-result">
+      <div class="result-title">✦ Recommended Breakdown</div>
+      <div class="result-items" id="result-items"></div>
+      <div class="result-total">
+        <span class="total-label">Total Budget</span>
+        <span class="total-price" id="total-price">PKR 0</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ TESTIMONIALS ══════════════════ -->
+<section style="background:var(--black);">
+  <div class="section-header text-center">
+    <div class="section-label">Reviews</div>
+    <h2 class="section-title">What Our Users Say</h2>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card"><div class="quote-mark">"</div><p class="testimonial-text">PlanMyEvent saved us so much stress! We found our photographer, decorator, and caterer all in one place. The 360° hall tour was amazing.</p><div class="testimonial-author"><div class="author-avatar">FA</div><div><div class="author-name">Fatima Ahmed</div><div class="author-event">Wedding, Karachi</div></div></div></div>
+    <div class="testimonial-card"><div class="quote-mark">"</div><p class="testimonial-text">The budget planner suggested a perfect combination within our budget. Booked everything in one afternoon. Highly recommend!</p><div class="testimonial-author"><div class="author-avatar">AK</div><div><div class="author-name">Ali Khan</div><div class="author-event">Birthday Party, Lahore</div></div></div></div>
+    <div class="testimonial-card"><div class="quote-mark">"</div><p class="testimonial-text">As a vendor, my bookings doubled within a month of joining. The platform is professional and brings genuine customers.</p><div class="testimonial-author"><div class="author-avatar">SR</div><div><div class="author-name">Sara Raza</div><div class="author-event">Photographer, Islamabad</div></div></div></div>
+  </div>
+</section>
+
+<!-- ══════════════════ FOOTER ══════════════════ -->
+<footer id="contact">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">PlanMyEvent</div>
+      <p class="footer-desc">Pakistan's most trusted event planning platform. Connecting people with verified vendors since 2024.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <a href="#">Photography</a><a href="#">Catering</a><a href="#">Decoration</a><a href="#">Makeup</a><a href="#">Venues</a>
+    </div>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <a href="#">How It Works</a><a href="#">Pricing</a><a href="#">For Vendors</a><a href="#">Blog</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="#">support@planmyevent.pk</a>
+      <a href="#">Karachi | Lahore | Islamabad</a>
+      <a href="#">+92 300 0000000</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 PlanMyEvent. All rights reserved.</span>
+    <span>Made with ♥ in Pakistan</span>
+  </div>
+</footer>
+
+<!-- ══════════════════ AUTH MODAL ══════════════════ -->
+<div class="modal-overlay" id="auth-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title" id="modal-title">Welcome Back</div>
+    <p class="modal-sub" id="modal-sub">Login to access bookings and your dashboard</p>
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tab-login" onclick="switchTab('login')">Login</button>
+      <button class="modal-tab" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+    <div class="modal-form" id="login-form">
+      <input class="modal-input" type="email" placeholder="Email Address">
+      <input class="modal-input" type="password" placeholder="Password">
+      <button class="btn-gold btn-lg" style="width:100%" onclick="handleLogin()">Login to My Account</button>
+      <p style="text-align:center;font-size:0.78rem;color:var(--text-muted)"><a href="#" style="color:var(--gold);text-decoration:none">Forgot Password?</a></p>
+    </div>
+    <div class="modal-form" id="signup-form" style="display:none">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.9rem">
+        <input class="modal-input" placeholder="First Name">
+        <input class="modal-input" placeholder="Last Name">
+      </div>
+      <input class="modal-input" type="email" placeholder="Email Address">
+      <input class="modal-input" type="tel" placeholder="Phone Number">
+      <input class="modal-input" type="password" placeholder="Create Password">
+      <select class="modal-input" style="cursor:pointer">
+        <option>I am an Event Organizer</option>
+        <option>I am a Vendor</option>
+      </select>
+      <button class="btn-gold btn-lg" style="width:100%" onclick="handleSignup()">Create Free Account</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ BOOKING MODAL ══════════════════ -->
+<div class="modal-overlay" id="booking-modal">
+  <div class="modal" style="max-width:510px">
+    <button class="modal-close" onclick="closeBooking()">✕</button>
+    <div class="modal-title">Book This Service</div>
+    <p class="modal-sub">Fill in your event details to confirm booking</p>
+    <div class="booking-detail">
+      <div class="vendor-category" id="bv-cat">Photography</div>
+      <div class="booking-vendor-name" id="bv-name">Royal Moments Studio</div>
+      <div style="display:flex;align-items:center;gap:0.9rem;margin-top:0.6rem">
+        <span class="capacity-badge" id="bv-price">PKR 45,000</span>
+        <span class="pill">⭐ 4.9 Rating</span>
+        <span class="pill" style="background:rgba(76,175,122,0.08);color:#4CAF7A;border-color:rgba(76,175,122,0.25)">✓ Verified</span>
+      </div>
+    </div>
+    <div class="modal-form">
+      <div class="date-grid">
+        <div class="form-group"><label class="form-label">Event Date</label><input class="modal-input" type="date"></div>
+        <div class="form-group"><label class="form-label">Event Time</label><input class="modal-input" type="time"></div>
+      </div>
+      <select class="modal-input"><option>Wedding</option><option>Mehndi</option><option>Birthday</option><option>Corporate</option><option>Engagement</option></select>
+      <input class="modal-input" placeholder="Venue / Location">
+      <input class="modal-input" type="number" placeholder="Expected Guest Count">
+      <textarea class="modal-input" rows="3" placeholder="Special requirements or notes..."></textarea>
+      <button class="btn-gold btn-lg" style="width:100%" onclick="confirmBooking()">✦ Confirm Booking Request</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ 360 MODAL ══════════════════ -->
+<div class="modal-overlay" id="viewer-modal">
+  <div class="modal" style="max-width:680px;width:100%">
+    <button class="modal-close" onclick="close360()">✕</button>
+    <div class="modal-title" id="hall-view-name">Grand Ballroom</div>
+    <p class="modal-sub">Drag to rotate · Scroll to zoom · Experience in full 360°</p>
+    <div class="viewer-360-wrap" id="viewer-wrap">
+      <!-- Three.js renders here -->
+      <div class="viewer-loading" id="viewer-loading">
+        <div class="spinner"></div>
+        <span style="color:var(--text-muted);font-size:0.78rem">Loading panorama…</span>
+      </div>
+      <div class="viewer-overlay-badge">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="2.5"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+        360° Live Tour
+      </div>
+      <div class="viewer-hint-bar">← Drag to rotate &nbsp;·&nbsp; Scroll to zoom →</div>
+    </div>
+    <div id="hall-view-specs" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.8rem;margin-top:1rem"></div>
+    <div style="display:flex;gap:1rem;margin-top:1.4rem">
+      <button class="btn-gold" style="flex:1;padding:0.8rem;font-family:'DM Sans',sans-serif;font-weight:700;border-radius:6px;cursor:pointer;border:none;" onclick="bookFromViewer()">Book This Hall</button>
+      <button class="btn-ghost" style="flex:1;padding:0.8rem;font-family:'DM Sans',sans-serif;font-weight:500;border-radius:6px;cursor:pointer;" onclick="close360()">Close Tour</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ TOAST ══════════════════ -->
+<div class="toast" id="toast">
+  <div class="toast-title" id="toast-title">Success!</div>
+  <div id="toast-msg">Your action was completed.</div>
+</div>
+
+<script>
+const DB = {
+  vendors: [
+    {id:1,name:"Royal Moments Studio",category:"Photography",city:"Karachi",rating:4.9,reviews:128,price:45000,badge:"verified",image:"https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80&fit=crop"},
+    {id:2,name:"Zafran Catering Co.",category:"Catering",city:"Lahore",rating:4.8,reviews:95,price:180000,badge:"featured",image:"https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80&fit=crop"},
+    {id:3,name:"Blooming Decors",category:"Decoration",city:"Karachi",rating:4.7,reviews:74,price:65000,badge:"verified",image:"https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=600&q=80&fit=crop"},
+    {id:4,name:"Glam by Sana",category:"Makeup",city:"Islamabad",rating:5.0,reviews:201,price:25000,badge:"verified",image:"https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=600&q=80&fit=crop"},
+    {id:5,name:"Sound Waves DJ",category:"DJ",city:"Karachi",rating:4.6,reviews:52,price:30000,badge:null,image:"https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&q=80&fit=crop"},
+    {id:6,name:"Noor Bridal Studio",category:"Bridal",city:"Lahore",rating:4.9,reviews:167,price:85000,badge:"verified",image:"https://images.unsplash.com/photo-1591604021695-0c69b7c05981?w=600&q=80&fit=crop"},
+    {id:7,name:"Lens & Life Photography",category:"Photography",city:"Islamabad",rating:4.7,reviews:88,price:38000,badge:null,image:"https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=600&q=80&fit=crop"},
+    {id:8,name:"Elite Event Planners",category:"Planners",city:"Karachi",rating:4.8,reviews:43,price:120000,badge:"verified",image:"https://images.unsplash.com/photo-1531058020387-3be344556be6?w=600&q=80&fit=crop"},
+    {id:9,name:"Khyber Catering",category:"Catering",city:"Islamabad",rating:4.5,reviews:61,price:150000,badge:null,image:"https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80&fit=crop"},
+  ],
+  halls: [
+    {id:1,name:"Pearl Continental Ballroom",city:"Karachi",capacity:1500,price:350000,area:"8,000 sq ft",parking:"300 cars",ac:true,image:"https://images.unsplash.com/photo-1505236858219-8359eb29e329?w=600&q=80&fit=crop"},
+    {id:2,name:"Avari Towers Grand Hall",city:"Lahore",capacity:800,price:220000,area:"5,000 sq ft",parking:"150 cars",ac:true,image:"https://images.unsplash.com/photo-1431540015161-0bf868a2d407?w=600&q=80&fit=crop"},
+    {id:3,name:"Serena Convention Centre",city:"Islamabad",capacity:2000,price:500000,area:"12,000 sq ft",parking:"500 cars",ac:true,image:"https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80&fit=crop"},
+    {id:4,name:"Rose Garden Banquet",city:"Karachi",capacity:600,price:150000,area:"3,500 sq ft",parking:"100 cars",ac:true,image:"https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=600&q=80&fit=crop"},
+  ],
+  packages: [
+    {id:1,name:"Silver",icon:`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,desc:"Perfect for intimate gatherings and small celebrations.",items:["Decoration (Basic)","Catering (100 pax)","Photography (4hrs)","Sound System"],price:"PKR 280,000",featured:false},
+    {id:2,name:"Gold",icon:`<svg width="22" height="22" viewBox="0 0 24 24" fill="#C9A84C" stroke="#C9A84C" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,desc:"Our most popular package for weddings and large events.",items:["Decoration (Premium)","Catering (300 pax)","Photography & Video","DJ & Sound","Makeup Artist","Event Coordinator"],price:"PKR 650,000",featured:true},
+    {id:3,name:"Diamond",icon:`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 13L2 9z"/><path d="M11 3L8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>`,desc:"The ultimate luxury experience for your most special day.",items:["Luxury Decoration","Catering (500 pax)","Cinematic Photography","Live Band + DJ","Full Bridal Package","Dedicated Planner","Venue Booking"],price:"PKR 1,200,000",featured:false},
+  ],
+  deals: [
+    {id:1,vendor:"Royal Moments Studio",service:"Wedding Photography",discount:30,oldPrice:"PKR 45,000",newPrice:"PKR 31,500",date:"Available: Dec 15, 2025",timer:"2d 4h left"},
+    {id:2,vendor:"Blooming Decors",service:"Mehndi Decoration",discount:25,oldPrice:"PKR 65,000",newPrice:"PKR 48,750",date:"Available: Dec 20, 2025",timer:"5d 12h left"},
+    {id:3,vendor:"Zafran Catering",service:"Catering 200 pax",discount:20,oldPrice:"PKR 180,000",newPrice:"PKR 144,000",date:"Available: Dec 18, 2025",timer:"3d 8h left"},
+    {id:4,vendor:"Avari Towers",service:"Grand Hall Booking",discount:15,oldPrice:"PKR 220,000",newPrice:"PKR 187,000",date:"Available: Jan 5, 2026",timer:"19d left"},
+  ]
+};
+
+let isLoggedIn=false,selectedVendor=null,selectedHall=null;
+let dragState={active:false,startX:0,offset:0};
+
+function renderVendors(filter='all'){
+  const grid=document.getElementById('vendors-grid');
+  const vendors=filter==='all'?DB.vendors:DB.vendors.filter(v=>v.category===filter);
+  grid.innerHTML=vendors.map(v=>`
+    <div class="vendor-card" onclick="openVendorDetail(${v.id})">
+      <div class="vendor-img">
+        <img src="${v.image}" alt="${v.name}" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#1C1C1C,#242424)'">
+        <div class="vendor-img-overlay"></div>
+        ${v.badge==='verified'?'<div class="vendor-badge verified">✓ Verified</div>':v.badge==='featured'?'<div class="vendor-badge">Featured</div>':''}
+        ${v.category==='Venues'?'<div class="vendor-360">⟳ 360°</div>':''}
+      </div>
+      <div class="vendor-info">
+        <div class="vendor-category">${v.category}</div>
+        <div class="vendor-name">${v.name}</div>
+        <div class="vendor-location">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          ${v.city}
+        </div>
+        <div class="vendor-rating">
+          <span class="stars">★★★★★</span>
+          <span class="rating-num">${v.rating} (${v.reviews} reviews)</span>
+        </div>
+        <div class="vendor-price">
+          <div><div class="price-from">Starting from</div><div class="price-amount">PKR ${v.price.toLocaleString()} <span>/ event</span></div></div>
+          <div class="vendor-actions">
+            <button class="btn-sm btn-sm-ghost" onclick="event.stopPropagation()">View</button>
+            <button class="btn-sm btn-sm-gold" onclick="event.stopPropagation();triggerBooking(${v.id})">Book Now</button>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function renderHalls(){
+  const grid=document.getElementById('halls-grid');
+  grid.innerHTML=DB.halls.map(h=>`
+    <div class="hall-card">
+      <div class="hall-preview" onclick="open360(${h.id})">
+        <img class="hall-preview-img" src="${h.image}" alt="${h.name}" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#1C1C1C,#2a2010)'">
+        <div class="hall-360-btn">
+          <div class="hall-360-circle">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+            <span style="font-size:0.62rem;color:var(--gold);font-weight:700;margin-top:2px">360°</span>
+          </div>
+        </div>
+      </div>
+      <div class="hall-info">
+        <div class="vendor-category">${h.city}</div>
+        <div class="hall-name">${h.name}</div>
+        <div class="hall-specs">
+          <div class="hall-spec"><div class="spec-label">Capacity</div><div class="spec-value gold">👥 ${h.capacity.toLocaleString()}</div></div>
+          <div class="hall-spec"><div class="spec-label">Area</div><div class="spec-value">${h.area}</div></div>
+          <div class="hall-spec"><div class="spec-label">Parking</div><div class="spec-value">${h.parking}</div></div>
+          <div class="hall-spec"><div class="spec-label">AC</div><div class="spec-value gold">${h.ac?'✓ Full AC':'No AC'}</div></div>
+        </div>
+        <div class="vendor-price">
+          <div><div class="price-from">Per Event</div><div class="price-amount">PKR ${h.price.toLocaleString()}</div></div>
+          <div class="vendor-actions">
+            <button class="btn-sm btn-sm-ghost" onclick="open360(${h.id})">⟳ 360°</button>
+            <button class="btn-sm btn-sm-gold" onclick="triggerHallBooking(${h.id})">Book Hall</button>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function renderPackages(){
+  const grid=document.getElementById('packages-grid');
+  grid.innerHTML=DB.packages.map(p=>`
+    <div class="package-card ${p.featured?'featured':''}">
+      <div class="package-icon">${p.icon}</div>
+      <div class="package-name">${p.name} Package</div>
+      <p class="package-desc">${p.desc}</p>
+      <ul class="package-includes">${p.items.map(i=>`<li>${i}</li>`).join('')}</ul>
+      <div class="package-price">${p.price} <span>/ complete</span></div>
+      <button class="btn-gold btn-lg" style="width:100%" onclick="triggerPackageBooking('${p.name}')">Book ${p.name} Package</button>
+    </div>`).join('');
+}
+
+function renderDeals(){
+  const grid=document.getElementById('deals-grid');
+  grid.innerHTML=DB.deals.map(d=>`
+    <div class="deal-card">
+      <div class="deal-timer">⏱ ${d.timer}</div>
+      <div class="deal-off">${d.discount}% OFF</div>
+      <div class="deal-name">${d.service}</div>
+      <div class="deal-vendor">by ${d.vendor}</div>
+      <div class="deal-prices"><span class="price-old">${d.oldPrice}</span><span class="price-new">${d.newPrice}</span></div>
+      <div class="deal-date"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:4px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${d.date}</div>
+      <button class="btn-sm btn-sm-gold" style="margin-top:0.8rem;width:100%" onclick="showToast('Deal Grabbed!','Book before the timer runs out!')">Grab This Deal</button>
+    </div>`).join('');
+}
+
+function filterVendors(cat,btn){
+  if(btn){document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+  renderVendors(cat);
+}
+
+function triggerBooking(vendorId){
+  if(!isLoggedIn){openModal('login');showToast('Login Required','Please login to book vendors');return;}
+  const v=DB.vendors.find(v=>v.id===vendorId);selectedVendor=v;
+  document.getElementById('bv-name').textContent=v.name;
+  document.getElementById('bv-cat').textContent=v.category;
+  document.getElementById('bv-price').textContent='PKR '+v.price.toLocaleString();
+  document.getElementById('booking-modal').classList.add('open');
+}
+function triggerHallBooking(hallId){
+  if(!isLoggedIn){openModal('login');showToast('Login Required','Please login to book halls');return;}
+  const h=DB.halls.find(h=>h.id===hallId);
+  document.getElementById('bv-name').textContent=h.name;
+  document.getElementById('bv-cat').textContent='Hall & Venue — '+h.city;
+  document.getElementById('bv-price').textContent='PKR '+h.price.toLocaleString();
+  document.getElementById('booking-modal').classList.add('open');
+}
+function triggerPackageBooking(pkg){
+  if(!isLoggedIn){openModal('login');showToast('Login Required','Please login to book packages');return;}
+  document.getElementById('bv-name').textContent=pkg+' Package';
+  document.getElementById('bv-cat').textContent='Complete Event Package';
+  document.getElementById('bv-price').textContent='Bundle Price';
+  document.getElementById('booking-modal').classList.add('open');
+}
+function openVendorDetail(id){
+  const v=DB.vendors.find(v=>v.id===id);
+  showToast(v.name,v.category+' • '+v.city+' • PKR '+v.price.toLocaleString());
+}
+function closeBooking(){document.getElementById('booking-modal').classList.remove('open');}
+function confirmBooking(){closeBooking();showToast('Booking Requested! ✦','The vendor will confirm within 24 hours.');}
+
+/* ── 360° PANORAMA VIEWER (Three.js) ── */
+let panoRenderer=null,panoScene=null,panoCamera=null,panoSphere=null,panoAnimId=null;
+let panoMouse={down:false,x:0,y:0,lon:0,lat:0,lonPrev:0,latPrev:0};
+let panoTouch={x:0,y:0};
+let panoAutoSpin=true,panoZoom=75;
+
+// Real ballroom/venue panorama images from Unsplash — each hall gets its own look
+const HALL_PANORAMAS=[
+  'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=4096&q=90',
+  'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=4096&q=90',
+  'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=4096&q=90',
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=4096&q=90',
+];
+
+
+function initPanoViewer(imgUrl){
+  const wrap=document.getElementById('viewer-wrap');
+  const old=wrap.querySelector('canvas');
+  if(old) old.remove();
+  if(panoAnimId){cancelAnimationFrame(panoAnimId);panoAnimId=null;}
+  if(window._panoCleanup){window._panoCleanup();}
+
+  const THREE=window.THREE;
+  if(!THREE){console.error('Three.js not loaded');return;}
+
+  panoScene=new THREE.Scene();
+  const wW=wrap.offsetWidth||640, wH=wrap.offsetHeight||320;
+  panoCamera=new THREE.PerspectiveCamera(panoZoom,wW/wH,0.1,1000);
+  panoCamera.position.set(0,0,0.001);
+
+  panoRenderer=new THREE.WebGLRenderer({antialias:true});
+  panoRenderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  panoRenderer.setSize(wW,wH);
+  wrap.insertBefore(panoRenderer.domElement,wrap.firstChild);
+
+  // sphere — normals flipped inward so we see inside
+  const geo=new THREE.SphereGeometry(500,64,32);
+  geo.scale(-1,1,1);
+
+  const loader=new THREE.TextureLoader();
+  loader.crossOrigin='anonymous';
+  const loadingEl=document.getElementById('viewer-loading');
+  loadingEl.classList.remove('hidden');
+
+  loader.load(
+    imgUrl,
+    (tex)=>{
+      // ✅ Real image loaded successfully
+      tex.minFilter=THREE.LinearFilter;
+      const mat=new THREE.MeshBasicMaterial({map:tex});
+      panoSphere=new THREE.Mesh(geo,mat);
+      panoScene.add(panoSphere);
+      loadingEl.classList.add('hidden');
+      panoMouse.lon=0; panoMouse.lat=0;
+      panoAutoSpin=true;
+      animatePano();
+    },
+    undefined,
+    ()=>{
+      // ❌ CORS/network fail — draw a nice canvas fallback
+      loadingEl.classList.add('hidden');
+      const cv=document.createElement('canvas');
+      cv.width=4096; cv.height=2048;
+      const ctx=cv.getContext('2d');
+      // ceiling
+      const cg=ctx.createLinearGradient(0,0,0,820);
+      cg.addColorStop(0,'#1a1208'); cg.addColorStop(1,'#2d1f08');
+      ctx.fillStyle=cg; ctx.fillRect(0,0,4096,820);
+      // chandeliers
+      for(let i=0;i<8;i++){
+        const cx=256+i*512, cy=200;
+        const rg=ctx.createRadialGradient(cx,cy,0,cx,cy,180);
+        rg.addColorStop(0,'rgba(255,220,100,0.9)');
+        rg.addColorStop(0.3,'rgba(201,168,76,0.5)');
+        rg.addColorStop(1,'transparent');
+        ctx.fillStyle=rg; ctx.fillRect(cx-180,cy-180,360,360);
+        ctx.beginPath(); ctx.arc(cx,cy,12,0,Math.PI*2);
+        ctx.fillStyle='#ffe066'; ctx.fill();
+      }
+      // walls
+      const wg=ctx.createLinearGradient(0,820,0,1620);
+      wg.addColorStop(0,'#1c1308'); wg.addColorStop(0.5,'#251a09'); wg.addColorStop(1,'#1c1308');
+      ctx.fillStyle=wg; ctx.fillRect(0,820,4096,800);
+      // arch columns
+      for(let i=0;i<9;i++){
+        const cx=i*512;
+        ctx.fillStyle='rgba(201,168,76,0.25)'; ctx.fillRect(cx-18,820,36,800);
+        ctx.beginPath(); ctx.arc(cx,820,120,Math.PI,0);
+        ctx.fillStyle='rgba(201,168,76,0.12)'; ctx.fill();
+        ctx.strokeStyle='rgba(201,168,76,0.4)'; ctx.lineWidth=2; ctx.stroke();
+      }
+      ctx.fillStyle='rgba(201,168,76,0.5)'; ctx.fillRect(0,815,4096,8); ctx.fillRect(0,1612,4096,8);
+      // floor
+      const fg=ctx.createLinearGradient(0,1620,0,2048);
+      fg.addColorStop(0,'#0e0a04'); fg.addColorStop(1,'#181105');
+      ctx.fillStyle=fg; ctx.fillRect(0,1620,4096,428);
+      for(let row=0;row<4;row++) for(let col=0;col<16;col++){
+        ctx.strokeStyle=`rgba(201,168,76,${0.05+row*0.03})`; ctx.lineWidth=1;
+        ctx.strokeRect(col*256,1620+row*107,256,107);
+      }
+      const tex2=new THREE.CanvasTexture(cv);
+      tex2.minFilter=THREE.LinearFilter;
+      panoSphere=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({map:tex2}));
+      panoScene.add(panoSphere);
+      panoMouse.lon=0; panoMouse.lat=0;
+      panoAutoSpin=true;
+      animatePano();
+    }
+  );
+
+  // ── Controls: mousemove & mouseup on document so drag never breaks ──
+  const el=panoRenderer.domElement;
+
+  const onMouseDown=e=>{
+    panoMouse.down=true; panoAutoSpin=false;
+    panoMouse.x=e.clientX; panoMouse.y=e.clientY;
+    panoMouse.lonPrev=panoMouse.lon; panoMouse.latPrev=panoMouse.lat;
+    el.style.cursor='grabbing';
+  };
+  const onMouseMove=e=>{
+    if(!panoMouse.down) return;
+    panoMouse.lon=panoMouse.lonPrev-(e.clientX-panoMouse.x)*0.25;
+    panoMouse.lat=Math.max(-85,Math.min(85,panoMouse.latPrev+(e.clientY-panoMouse.y)*0.18));
+  };
+  const onMouseUp=()=>{panoMouse.down=false; el.style.cursor='grab';};
+
+  el.addEventListener('mousedown',onMouseDown);
+  document.addEventListener('mousemove',onMouseMove);
+  document.addEventListener('mouseup',onMouseUp);
+
+  el.addEventListener('wheel',e=>{
+    panoZoom=Math.max(30,Math.min(100,panoZoom+e.deltaY*0.05));
+    panoCamera.fov=panoZoom; panoCamera.updateProjectionMatrix();
+  },{passive:true});
+
+  const onTouchStart=e=>{
+    panoAutoSpin=false;
+    panoTouch.x=e.touches[0].clientX; panoTouch.y=e.touches[0].clientY;
+    panoMouse.lonPrev=panoMouse.lon; panoMouse.latPrev=panoMouse.lat;
+  };
+  const onTouchMove=e=>{
+    panoMouse.lon=panoMouse.lonPrev-(e.touches[0].clientX-panoTouch.x)*0.3;
+    panoMouse.lat=Math.max(-85,Math.min(85,panoMouse.latPrev+(e.touches[0].clientY-panoTouch.y)*0.2));
+  };
+  el.addEventListener('touchstart',onTouchStart,{passive:true});
+  el.addEventListener('touchmove',onTouchMove,{passive:true});
+
+  window._panoCleanup=()=>{
+    el.removeEventListener('mousedown',onMouseDown);
+    document.removeEventListener('mousemove',onMouseMove);
+    document.removeEventListener('mouseup',onMouseUp);
+    el.removeEventListener('touchstart',onTouchStart);
+    el.removeEventListener('touchmove',onTouchMove);
+    window._panoCleanup=null;
+  };
+}
+
+function animatePano(){
+  if(!panoRenderer||!panoScene||!panoCamera) return;
+  panoAnimId=requestAnimationFrame(animatePano);
+  if(panoAutoSpin) panoMouse.lon+=0.04;
+  const T=window.THREE;
+  const phi=T.MathUtils.degToRad(90-panoMouse.lat);
+  const theta=T.MathUtils.degToRad(panoMouse.lon);
+  panoCamera.lookAt(500*Math.sin(phi)*Math.cos(theta),500*Math.cos(phi),500*Math.sin(phi)*Math.sin(theta));
+  panoRenderer.render(panoScene,panoCamera);
+}
+
+function open360(hallId){
+  const h=DB.halls.find(h=>h.id===hallId); selectedHall=h;
+  document.getElementById('hall-view-name').textContent=h.name+' — 360° Tour';
+  document.getElementById('hall-view-specs').innerHTML=`
+    <div class="hall-spec"><div class="spec-label">Capacity</div><div class="spec-value gold">👥 ${h.capacity.toLocaleString()}</div></div>
+    <div class="hall-spec"><div class="spec-label">Area</div><div class="spec-value">${h.area}</div></div>
+    <div class="hall-spec"><div class="spec-label">Price</div><div class="spec-value gold">PKR ${h.price.toLocaleString()}</div></div>`;
+  document.getElementById('viewer-modal').classList.add('open');
+  const panoUrl=HALL_PANORAMAS[(hallId-1)%HALL_PANORAMAS.length];
+  panoZoom=75;
+  setTimeout(()=>{
+    if(!window.THREE){
+      const s=document.createElement('script');
+      s.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+      s.onload=()=>initPanoViewer(panoUrl);
+      document.head.appendChild(s);
+    } else {
+      initPanoViewer(panoUrl);
+    }
+  },80);
+}
+
+function close360(){
+  document.getElementById('viewer-modal').classList.remove('open');
+  if(window._panoCleanup) window._panoCleanup();
+  if(panoAnimId){cancelAnimationFrame(panoAnimId);panoAnimId=null;}
+  if(panoRenderer){panoRenderer.dispose();panoRenderer=null;}
+  panoScene=null; panoCamera=null;
+  const wrap=document.getElementById('viewer-wrap');
+  const c=wrap.querySelector('canvas');if(c)c.remove();
+  document.getElementById('viewer-loading').classList.remove('hidden');
+}
+function bookFromViewer(){close360();if(selectedHall)triggerHallBooking(selectedHall.id);}
+// keep old stubs safe
+function startDrag(){}function drag(){}function stopDrag(){}
+
+function openModal(tab='login'){document.getElementById('auth-modal').classList.add('open');switchTab(tab);}
+function closeModal(){document.getElementById('auth-modal').classList.remove('open');}
+function switchTab(tab){
+  const isLogin=tab==='login';
+  document.getElementById('tab-login').classList.toggle('active',isLogin);
+  document.getElementById('tab-signup').classList.toggle('active',!isLogin);
+  document.getElementById('login-form').style.display=isLogin?'grid':'none';
+  document.getElementById('signup-form').style.display=isLogin?'none':'grid';
+  document.getElementById('modal-title').textContent=isLogin?'Welcome Back':'Create Account';
+  document.getElementById('modal-sub').textContent=isLogin?'Login to access bookings and your dashboard':'Join free and start planning your perfect event';
+}
+function handleLogin(){
+  isLoggedIn=true;closeModal();
+  showToast('Welcome Back! ✦','You are now logged in. Happy planning!');
+  document.querySelector('.btn-ghost').textContent='My Dashboard';
+  document.querySelector('nav .btn-gold').textContent='Logout';
+  document.querySelector('nav .btn-gold').onclick=handleLogout;
+}
+function handleSignup(){
+  isLoggedIn=true;closeModal();
+  showToast('Account Created! ✦','Welcome to PlanMyEvent! Start exploring vendors.');
+  document.querySelector('.btn-ghost').textContent='My Dashboard';
+  document.querySelector('nav .btn-gold').textContent='Logout';
+  document.querySelector('nav .btn-gold').onclick=handleLogout;
+}
+function handleLogout(){
+  isLoggedIn=false;
+  document.querySelector('.btn-ghost').textContent='Login';
+  document.querySelector('.btn-ghost').onclick=()=>openModal('login');
+  document.querySelector('nav .btn-gold').textContent='Sign Up Free';
+  document.querySelector('nav .btn-gold').onclick=()=>openModal('signup');
+  showToast('Logged Out','See you soon!');
+}
+
+function updateBudget(val){document.getElementById('budget-val').textContent='PKR '+parseInt(val).toLocaleString();}
+function calculateBudget(){
+  const budget=parseInt(document.getElementById('bp-budget').value);
+  const event=document.getElementById('bp-event').value;
+  const breakdown=[
+    {name:'Hall / Venue',pct:0.30},{name:'Catering',pct:0.35},
+    {name:'Photography & Video',pct:0.10},{name:'Decoration',pct:0.12},
+    {name:'Makeup & Bridal',pct:0.07},{name:'DJ & Entertainment',pct:0.04},
+    {name:'Miscellaneous',pct:0.02},
+  ];
+  const items=breakdown.map(b=>({name:b.name,price:Math.round(budget*b.pct)}));
+  document.getElementById('result-items').innerHTML=items.map(i=>`
+    <div class="result-item"><span class="result-name">${i.name}</span><span class="result-price">PKR ${i.price.toLocaleString()}</span></div>`).join('');
+  document.getElementById('total-price').textContent='PKR '+budget.toLocaleString();
+  document.getElementById('budget-result').classList.add('show');
+  showToast('Budget Calculated! ✦','Smart breakdown ready for your '+event+'.');
+}
+
+function showToast(title,msg){
+  const t=document.getElementById('toast');
+  document.getElementById('toast-title').textContent=title;
+  document.getElementById('toast-msg').textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+/* ══ AVAILABILITY CALENDAR ══ */
+const AVAIL_DATA = {
+  v1:{name:'Royal Moments Studio',cat:'Photography',city:'Karachi',rating:'4.9',price:'PKR 45,000',booked:[3,10,15,22,28],pending:[7,20],off:[1]},
+  v2:{name:'Zafran Catering Co.',cat:'Catering',city:'Lahore',rating:'4.8',price:'PKR 180,000',booked:[5,12,18,25],pending:[9,20],off:[2,3]},
+  v3:{name:'Blooming Decors',cat:'Decoration',city:'Karachi',rating:'4.7',price:'PKR 65,000',booked:[4,11,19,26],pending:[16],off:[]},
+  v4:{name:'Glam by Sana',cat:'Makeup',city:'Islamabad',rating:'5.0',price:'PKR 25,000',booked:[6,13,20,27],pending:[3,17],off:[1]},
+  v5:{name:'Sound Waves DJ',cat:'DJ & Sound',city:'Karachi',rating:'4.6',price:'PKR 30,000',booked:[8,15,22],pending:[5],off:[]},
+  v6:{name:'Noor Bridal Studio',cat:'Bridal',city:'Lahore',rating:'4.9',price:'PKR 85,000',booked:[2,9,16,23,30],pending:[12,25],off:[1]},
+  v7:{name:'Lens & Life Photography',cat:'Photography',city:'Islamabad',rating:'4.7',price:'PKR 38,000',booked:[7,14,21,28],pending:[4],off:[]},
+  v9:{name:'Khyber Catering',cat:'Catering',city:'Islamabad',rating:'4.5',price:'PKR 150,000',booked:[3,10,17,24],pending:[6,20],off:[2]},
+  h1:{name:'Pearl Continental Ballroom',cat:'Hall & Venue',city:'Karachi',rating:'5.0',price:'PKR 350,000',cap:'1,500 people',booked:[1,8,15,20,25,28],pending:[5,12],off:[]},
+  h2:{name:'Avari Towers Grand Hall',cat:'Hall & Venue',city:'Lahore',rating:'4.8',price:'PKR 220,000',cap:'800 people',booked:[3,10,17,22,29],pending:[7,19],off:[1,2]},
+  h3:{name:'Serena Convention Centre',cat:'Hall & Venue',city:'Islamabad',rating:'4.9',price:'PKR 500,000',cap:'2,000 people',booked:[4,11,18,25],pending:[8],off:[]},
+  h4:{name:'Rose Garden Banquet',cat:'Hall & Venue',city:'Karachi',rating:'4.7',price:'PKR 150,000',cap:'600 people',booked:[6,13,20,27],pending:[3,16],off:[1]},
+};
+const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function loadAvailability(){
+  const sel = document.getElementById('avail-vendor').value;
+  const monthVal = parseInt(document.getElementById('avail-month').value);
+  const year = monthVal <= 2 ? 2026 : 2025;
+  const placeholder = document.getElementById('cal-placeholder');
+  const calContent = document.getElementById('cal-content');
+  const vendorCard = document.getElementById('avail-vendor-card');
+  const statsCard = document.getElementById('avail-stats-card');
+  if(!sel){ placeholder.style.display='flex'; calContent.style.display='none'; vendorCard.style.display='none'; statsCard.style.display='none'; return; }
+  const d = AVAIL_DATA[sel];
+  if(!d) return;
+  placeholder.style.display='none'; calContent.style.display='block'; vendorCard.style.display='block'; statsCard.style.display='block';
+
+  // Vendor card
+  document.getElementById('avc-cat').textContent = d.cat;
+  document.getElementById('avc-name').textContent = d.name;
+  document.getElementById('avc-city').innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8A857E" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> ${d.city}`;
+  const specs = [
+    {label:'Rating',val:'★ '+d.rating},{label:'Starting Price',val:d.price},
+    ...(d.cap ? [{label:'Capacity',val:d.cap}] : []),
+  ];
+  document.getElementById('avc-specs').innerHTML = specs.map(s=>`<div style="background:var(--dark3);border-radius:6px;padding:0.55rem 0.8rem;border:1px solid var(--border)"><div style="font-size:0.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.6px">${s.label}</div><div style="font-size:0.88rem;font-weight:600;color:var(--gold);margin-top:0.15rem">${s.val}</div></div>`).join('');
+  document.getElementById('avc-book-btn').onclick = () => {
+    if(sel.startsWith('h')) triggerHallBooking(parseInt(sel.replace('h','')));
+    else triggerBooking(parseInt(sel.replace('v','')));
+  };
+
+  // Calendar header
+  document.getElementById('cal-vendor-name').textContent = d.name;
+  document.getElementById('cal-month-label').textContent = MONTH_NAMES[monthVal] + ' ' + year;
+
+  // Build calendar
+  const daysInMonth = new Date(year, monthVal+1, 0).getDate();
+  const firstDay = new Date(year, monthVal, 1).getDay();
+  let html = '';
+  for(let i=0;i<firstDay;i++) html += `<div style="min-height:44px;"></div>`;
+  for(let day=1;day<=daysInMonth;day++){
+    const isBooked = d.booked.includes(day);
+    const isPending = d.pending.includes(day);
+    const isOff = d.off && d.off.includes(day);
+    let bg,border,color,label='';
+    if(isBooked){ bg='rgba(217,79,79,0.15)';border='rgba(217,79,79,0.45)';color='#D94F4F';label='Booked'; }
+    else if(isPending){ bg='rgba(232,168,56,0.12)';border='rgba(232,168,56,0.4)';color='#E8A838';label='Pending'; }
+    else if(isOff){ bg='var(--dark3)';border='var(--border)';color='var(--text-dim)';label='N/A'; }
+    else { bg='rgba(76,175,122,0.12)';border='rgba(76,175,122,0.4)';color='#4CAF7A';label='Free'; }
+    html += `<div onclick="selectAvailDate(${day},'${label}','${MONTH_NAMES[monthVal]} ${day}, ${year}')" 
+      style="min-height:44px;border-radius:7px;padding:0.4rem 0.5rem;border:1px solid ${border};background:${bg};cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;"
+      onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+      <div style="font-size:0.82rem;font-weight:600;color:${color}">${day}</div>
+      <div style="font-size:0.55rem;color:${color};opacity:0.8;font-weight:600;letter-spacing:0.3px">${label}</div>
+    </div>`;
+  }
+  document.getElementById('cal-days-grid').innerHTML = html;
+
+  // Stats
+  const totalDays = daysInMonth - firstDay;
+  const booked = d.booked.length, pending = d.pending.length, off = (d.off||[]).length;
+  const free = totalDays - booked - pending - off;
+  document.getElementById('avail-stats-inner').innerHTML = [
+    {label:'Available Dates',val:free,color:'#4CAF7A'},
+    {label:'Booked Dates',val:booked,color:'#D94F4F'},
+    {label:'Pending / On Hold',val:pending,color:'#E8A838'},
+    {label:'Unavailable',val:off,color:'var(--text-dim)'},
+  ].map(s=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:0.45rem 0;border-bottom:1px solid var(--border)">
+    <span style="font-size:0.82rem;color:var(--text-muted)">${s.label}</span>
+    <span style="font-size:0.9rem;font-weight:700;color:${s.color}">${s.val} days</span>
+  </div>`).join('');
+}
+
+function selectAvailDate(day, status, fullDate){
+  const dateCard = document.getElementById('avail-date-card');
+  dateCard.style.display = 'block';
+  document.getElementById('adc-date').textContent = fullDate;
+  const configs = {
+    'Free':{color:'#4CAF7A',msg:'This date is available for booking!',action:`<button class="btn-gold" style="width:100%;padding:0.65rem;font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.82rem;border-radius:6px;cursor:pointer;border:none;" onclick="document.getElementById('avail-vendor').dispatchEvent(new Event('change'));showToast('Great Choice! ✦','Proceeding to book for ${fullDate}')">Book This Date</button>`},
+    'Booked':{color:'#D94F4F',msg:'This date is already fully booked.',action:`<button style="width:100%;padding:0.65rem;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.82rem;border-radius:6px;cursor:pointer;background:transparent;color:var(--text-muted);border:1px solid var(--border);" onclick="showToast('Set Reminder','We will notify you if this date becomes available!')">Notify if Available</button>`},
+    'Pending':{color:'#E8A838',msg:'This date is on hold — pending confirmation.',action:`<button style="width:100%;padding:0.65rem;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.82rem;border-radius:6px;cursor:pointer;background:transparent;color:var(--text-muted);border:1px solid var(--border);" onclick="showToast('Added to Waitlist','You will be notified if this date opens up!')">Join Waitlist</button>`},
+    'N/A':{color:'var(--text-dim)',msg:'This date is unavailable (vendor off day).',action:''},
+  };
+  const cfg = configs[status] || configs['Free'];
+  document.getElementById('adc-status').innerHTML = `<span style="color:${cfg.color}">● ${status === 'Free' ? '✓ Available' : status === 'Booked' ? '✗ Booked' : status === 'Pending' ? '⏳ Pending' : '— Unavailable'}</span>`;
+  document.getElementById('adc-status').nextElementSibling && document.getElementById('adc-status').nextElementSibling.remove();
+  document.getElementById('adc-action').innerHTML = `<p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.8rem;">${cfg.msg}</p>${cfg.action}`;
+}
+
+document.getElementById('auth-modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+document.getElementById('booking-modal').addEventListener('click',function(e){if(e.target===this)closeBooking();});
+document.getElementById('viewer-modal').addEventListener('click',function(e){if(e.target===this)close360();});
+
+renderVendors();renderHalls();renderPackages();renderDeals();
+</script>
+</body>
+</html>
