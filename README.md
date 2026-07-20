@@ -58,7 +58,7 @@ Features include:
 
 ### Homepage
 
-![Homepage](images/Full_Webpage.png)
+![Homepage](images/PlanMyEvent.png)
 
 ---
 
