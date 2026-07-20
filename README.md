@@ -61,6 +61,8 @@ Features include:
 ![Homepage](images/PlanMyEvent.png)
 
 ---
+![360 Tour](images/360_tour.png)
+
 
 ### Dashboard
 
